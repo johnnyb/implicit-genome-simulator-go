@@ -2,7 +2,8 @@ package simulator
 
 type LocusType int
 const (
-	LOCUS_BOOLEAN = iota
+	LOCUS_UNDEFINED LocusType = iota
+	LOCUS_BOOLEAN
 	LOCUS_DISCRETE
 	LOCUS_CONTINUOUS
 )
