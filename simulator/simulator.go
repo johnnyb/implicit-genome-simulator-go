@@ -1,9 +1,5 @@
 package simulator
 
-import (
-	"fmt"
-)
-
 type Simulator struct {
 	ImplicitGenome *ImplicitGenome
 	Organisms []*Organism
@@ -28,8 +24,9 @@ func NewSimulator(numLoci, numOrganisms int) *Simulator{
 }
 
 func (rec *Simulator) PerformIteration() {
+	DataLog(ITERATION_START, nil)
 	rec.Time += 1
-	fmt.Printf("Iteration %d: Organisms %d\n", rec.Time, len(rec.Organisms))
+	Log("Iteration %d: Organisms %d\n", rec.Time, len(rec.Organisms))
 	newOrganisms := []*Organism{}
 	for _, o := range(rec.Organisms) {
 		offspring := o.OffspringForEnvironment(rec.Environment)
@@ -40,6 +37,8 @@ func (rec *Simulator) PerformIteration() {
 	rec.Organisms = newOrganisms
 
 	rec.ChangeEnvironment()
+
+	DataLog(ITERATION_COMPLETE, nil)
 }
 
 func (rec *Simulator) PerformIterations(numIterations int) {
@@ -51,3 +50,4 @@ func (rec *Simulator) PerformIterations(numIterations int) {
 func (rec *Simulator) ChangeEnvironment() {
 	// FIXME
 }
+

@@ -1,9 +1,5 @@
 package simulator
 
-import (
-	// "fmt"
-)
-
 type Organism struct {
 	ImplicitGenome *ImplicitGenome
 	Loci []Locus
@@ -48,12 +44,19 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 	fitness := rec.FitnessForEnvironment(env)
 	numOffspring := NumOffspringForFitness(fitness)
 
-	// fmt.Printf("Organism: Fitness/%f Offspring/%d\n", fitness, numOffspring)
+	// Log("Organism: Fitness/%f Offspring/%d\n", fitness, numOffspring)
 
 	for i := 0; i < numOffspring; i++ {
 		newOrganism := rec.Duplicate()
 		newOrganism.Evolve()
 		offspring = append(offspring, newOrganism)
+
+		// Is it more or less fit?
+		newFitness := newOrganism.FitnessForEnvironment(env)
+		if newFitness != fitness {
+			DataLog(ORGANISM_FITNESS_DIFFERENCE, newFitness - fitness)
+			DataLog(ORGANISM_MUTATIONS_BENEFICIAL, newFitness > fitness)
+		}
 	}
 
 	return offspring

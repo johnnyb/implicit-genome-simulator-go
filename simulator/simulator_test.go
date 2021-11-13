@@ -2,11 +2,21 @@ package simulator
 
 import (
 	"testing"
+	"time"
+	"math/rand"
 )
 
 func TestSimulator(t *testing.T) {
-	sim := NewSimulator(20, 1000)
-	sim.PerformIterations(100)
+	// Create simulator
+	sim := NewSimulator(10, 10000)
 
-	t.Errorf("Done")
+	// Setup Data Logging
+	DataContext = sim 
+	DataLog = DataLogBeneficialMutations
+
+	// Seed PRNG
+	rand.Seed(time.Now().UnixNano()) 
+
+	// DO IT!
+	sim.PerformIterations(1000)
 }
