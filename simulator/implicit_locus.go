@@ -32,3 +32,19 @@ func (rec *ImplicitLocus) GenerateDiscreteValue() int {
 func (rec *ImplicitLocus) GenerateContinuousValue() float32 {
 	return RandomFloat()
 }
+
+func (rec *ImplicitLocus) GenerateContinuousModificationFrom(prev float32) float32 {
+	distance := RandomFloat() * 0.25
+	if RandomFloat() < 0.5 {
+		prev -= distance
+		if prev < 0 {
+			prev = 0
+		}
+	} else {
+		prev += distance
+		if prev > 1 {
+			prev = 1
+		}
+	}
+	return prev
+}

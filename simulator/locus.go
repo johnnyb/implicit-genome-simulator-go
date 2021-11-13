@@ -6,6 +6,24 @@ type Locus struct {
 	ValueContinuous float32
 }
 
+func NewLocus(ilocus *ImplicitLocus) Locus {
+	l := Locus {
+		ImplicitLocus: ilocus,
+	}
+	switch ilocus.LocusType {
+		case LOCUS_CONTINUOUS:
+			l.ValueContinuous = ilocus.GenerateContinuousValue()
+
+		case LOCUS_DISCRETE:
+			l.ValueDiscrete = ilocus.GenerateDiscreteValue()
+
+		default:
+			panic("Invalid Locus Type")
+	}
+
+	return l
+}
+
 func (rec *Locus) PossiblyMutate() {
 	if RandomFloat() < rec.ImplicitLocus.Mutability {
 		rec.Mutate()
@@ -15,19 +33,10 @@ func (rec *Locus) PossiblyMutate() {
 func (rec *Locus) Mutate() {
 	switch rec.ImplicitLocus.LocusType {
 		case LOCUS_CONTINUOUS:
-			distance := RandomFloat() * 0.25
-			if RandomFloat() < 0.5 {
-				rec.ValueContinuous -= distance
-				if rec.ValueContinuous < 0 {
-					rec.ValueContinuous = 0
-				}
-			} else {
-				rec.ValueContinuous += distance
-				if rec.ValueContinuous > 1 {
-					rec.ValueContinuous = 1
-				}
-			}
+			rec.ValueContinuous = rec.ImplicitLocus.GenerateContinuousModificationFrom(rec.ValueContinuous)
+
 		case LOCUS_DISCRETE:
+			rec.ValueDiscrete = rec.ImplicitLocus.GenerateDiscreteValue()
 
 		default:
 			panic("Bad locus type")
