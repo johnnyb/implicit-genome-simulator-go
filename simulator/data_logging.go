@@ -10,9 +10,9 @@ const (
 	ORGANISM_MUTATIONS_BENEFICIAL
 )
 
-
 var beneficialCount int = 0
 var deleteriousCount int = 0
+// DataLogBeneficialMutations is a logging function which gives the beneficial/deleterious ratio.
 func DataLogBeneficialMutations(metric Metric, value interface{}) {
 	switch metric {
 		case ORGANISM_MUTATIONS_BENEFICIAL:
@@ -29,6 +29,7 @@ func DataLogBeneficialMutations(metric Metric, value interface{}) {
 	}
 }
 
+// DataLogVerbose is a logging function that prints everything.  Mostly useful for debugging.
 func DataLogVerbose(metric Metric, value interface{}) {
 	if DataContext != nil {
 		switch value.(type) {

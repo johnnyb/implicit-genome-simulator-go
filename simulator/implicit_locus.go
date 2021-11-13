@@ -7,15 +7,21 @@ const (
 	LOCUS_CONTINUOUS
 )
 
+// ImplicitLocus is the generic type of a locus.
+// Note that on the implementation, the value is always a float even if it is discrete.
+// This makes the implementation easier and more uniform.
 type ImplicitLocus struct {
-	LocusType LocusType
-	RangeMax float32
-	Mutability float32
+	LocusType LocusType  // LocusType tells whether this is a continuous or discrete-valued locus
+	RangeMax float32     // RangeMax tells the maximum of the states that this will take (total states = RangeMax + 1); only used on discrete-valued loci.
+	ContinuousChangeMax float32 // The maximum amount that a continuous loci can change in a single mutation
+	Mutability float32   // Mutability gives the change that this locus will be mutated per iteration.
 }
 
+// NewImplicitLocus creates a new implicit locus and sets the type and range randomly.
 func NewImplicitLocus() *ImplicitLocus {
 	rec := ImplicitLocus{}
 	rec.Mutability = 0.0001
+	rec.ContinuousChangeMax = 0.25
 	if RandomFloat() < 0.5 {
 		rec.LocusType = LOCUS_CONTINUOUS
 		rec.RangeMax = 1.0
@@ -26,6 +32,7 @@ func NewImplicitLocus() *ImplicitLocus {
 	return &rec
 }
 
+// GenerateValue generates a random valid value for this locus.
 func (rec *ImplicitLocus) GenerateValue() float32 {
 	switch rec.LocusType {
 		case LOCUS_CONTINUOUS:
@@ -39,22 +46,24 @@ func (rec *ImplicitLocus) GenerateValue() float32 {
 	}
 }
 
+// GenerateModifiedValueFrom provides mutability for a locus.  Given a previous value, this determines what the next value should be.
+// Discrete values are simply equivalent to GenerateValue().  Continuous values are bounded by (+/-) ContinuousChangeMax.
 func (rec *ImplicitLocus) GenerateModifiedValueFrom(prev float32) float32 {
 	switch rec.LocusType {
 		case LOCUS_CONTINUOUS:
-			distance := RandomFloat() * 0.25
-			if RandomFloat() < 0.5 {
-				prev -= distance
-				if prev < 0 {
-					prev = 0
-				}
+			// Calculate the new value
+			distance := RandomFloat() * rec.ContinuousChangeMax * 2 - rec.ContinuousChangeMax
+			newVal := prev + distance
+
+			// Bounds check
+			if newVal > 1 {
+				newVal = 1
 			} else {
-				prev += distance
-				if prev > 1 {
-					prev = 1
+				if newVal < 0 {
+					newVal = 0
 				}
 			}
-			return prev
+			return newVal
 
 		case LOCUS_DISCRETE:
 			return rec.GenerateValue()

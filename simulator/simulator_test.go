@@ -8,7 +8,7 @@ import (
 
 func TestSimulator(t *testing.T) {
 	// Create simulator
-	sim := NewSimulator(10, 10000)
+	sim := NewSimulator(10, 100)
 
 	// Setup Data Logging
 	DataContext = sim 

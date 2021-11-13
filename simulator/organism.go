@@ -1,10 +1,13 @@
 package simulator
 
+// Organism is a collection of loci.
 type Organism struct {
 	ImplicitGenome *ImplicitGenome
 	Loci []Locus
 }
 
+// Creates a new organism with the given implicit genome.
+// Assigns initial values of loci randomly
 func NewOrganism(igenome *ImplicitGenome) *Organism {
 	rec := Organism{
 		ImplicitGenome: igenome,
@@ -17,6 +20,7 @@ func NewOrganism(igenome *ImplicitGenome) *Organism {
 	return &rec
 }
 
+// Duplicate does a perfect duplication of the organism (no mutations).  Use Evolve() on the duplicated organism to potentially get mutations.
 func (rec *Organism) Duplicate() *Organism {
 	newrec := Organism{
 		ImplicitGenome: rec.ImplicitGenome,
@@ -29,6 +33,15 @@ func (rec *Organism) Duplicate() *Organism {
 	return &newrec
 }
 
+// Evolve goes through an organism's loci and applies random changes based on the mutation rate (using PossiblyMutate from the Locus).
+func (rec *Organism) Evolve() {
+	for idx := range(rec.Loci) {
+		rec.Loci[idx].PossiblyMutate()
+	}
+}
+
+
+// FitnessForEnvironment evaluates the fitness of the total organism in a given environment.
 func (rec *Organism) FitnessForEnvironment(env *Environment) float32 {
 	var fitnessSum float32 = 0
 	for _, locus := range(rec.Loci) {
@@ -39,6 +52,7 @@ func (rec *Organism) FitnessForEnvironment(env *Environment) float32 {
 	return fitness
 }
 
+// OffspringForEnvironment duplicates and evolves an organism based on their environment.
 func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 	offspring := []*Organism{}
 	fitness := rec.FitnessForEnvironment(env)
@@ -62,12 +76,7 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 	return offspring
 }
 
-func (rec *Organism) Evolve() {
-	for idx := range(rec.Loci) {
-		rec.Loci[idx].PossiblyMutate()
-	}
-}
-
+// NumOffspringForFitness uses the PRNG to determine, based on fitness, how many offspring an organism should have.
 func NumOffspringForFitness(fitness float32) int {
 	num := 0
 	ratio := fitness / (fitness + 1)

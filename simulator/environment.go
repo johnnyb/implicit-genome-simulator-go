@@ -1,6 +1,6 @@
 package simulator
 
-const MAX_FITNESS = 3
+var MAX_FITNESS float32 = 5
 
 type Environment struct {
 	ImplicitGenome *ImplicitGenome
