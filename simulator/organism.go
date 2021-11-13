@@ -30,7 +30,11 @@ func (rec *Organism) Duplicate() *Organism {
 }
 
 func (rec *Organism) FitnessForEnvironment(env *Environment) float32 {
-	return 1
+	var fitnessSum float32 = 0
+	for _, locus := range(rec.Loci) {
+		fitnessSum += env.FitnessForLocus(locus)
+	}
+	return fitnessSum / ((float32)(len(rec.Loci)))
 }
 
 func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
