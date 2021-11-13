@@ -43,3 +43,9 @@ When testing, you should always seed the PRNG.
 However, when doing official data gathering, leaving the PRNG unseeded (or with a fixed seed) will allow your data to be deterministically recreated.
 
 You can also do a true random number generator by setting `simulator.RandomInt` and `simulator.RandomFloat` to be your own functions.
+
+You can do a basic run by just doing:
+```
+go build
+./implicit-genome-simulator-go
+```
