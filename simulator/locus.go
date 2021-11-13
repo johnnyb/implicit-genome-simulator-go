@@ -6,6 +6,9 @@ type Locus struct {
 }
 
 func NewLocus(ilocus *ImplicitLocus) Locus {
+	if ilocus == nil {
+		panic("Nil ilocus")
+	}
 	l := Locus {
 		ImplicitLocus: ilocus,
 		Value: ilocus.GenerateValue(),

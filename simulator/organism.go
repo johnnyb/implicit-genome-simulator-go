@@ -1,5 +1,9 @@
 package simulator
 
+import (
+	// "fmt"
+)
+
 type Organism struct {
 	ImplicitGenome *ImplicitGenome
 	Loci []Locus
@@ -22,7 +26,7 @@ func (rec *Organism) Duplicate() *Organism {
 		ImplicitGenome: rec.ImplicitGenome,
 		Loci: make([]Locus, len(rec.Loci)),
 	}
-	for i := 1; i < len(rec.Loci); i++ {
+	for i := 0; i < len(rec.Loci); i++ {
 		newrec.Loci[i] = rec.Loci[i]
 	}
 
@@ -34,7 +38,9 @@ func (rec *Organism) FitnessForEnvironment(env *Environment) float32 {
 	for _, locus := range(rec.Loci) {
 		fitnessSum += env.FitnessForLocus(locus)
 	}
-	return fitnessSum / ((float32)(len(rec.Loci)))
+	fitness := fitnessSum / ((float32)(len(rec.Loci)))
+
+	return fitness
 }
 
 func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
@@ -42,9 +48,12 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 	fitness := rec.FitnessForEnvironment(env)
 	numOffspring := NumOffspringForFitness(fitness)
 
+	// fmt.Printf("Organism: Fitness/%f Offspring/%d\n", fitness, numOffspring)
+
 	for i := 0; i < numOffspring; i++ {
 		newOrganism := rec.Duplicate()
 		newOrganism.Evolve()
+		offspring = append(offspring, newOrganism)
 	}
 
 	return offspring
@@ -60,10 +69,11 @@ func NumOffspringForFitness(fitness float32) int {
 	num := 0
 	ratio := fitness / (fitness + 1)
 	for {
-		if RandomFloat() > ratio {
+		tmp := RandomFloat()
+		if tmp > ratio {
 			break
-			num += 1
-		}
+		} 
+		num += 1
 	}
 
 	return num

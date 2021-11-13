@@ -1,5 +1,11 @@
 package simulator
 
+import (
+	"fmt"
+)
+
+const MAX_FITNESS = 10
+
 type Environment struct {
 	ImplicitGenome *ImplicitGenome
 	FitnessData map[*ImplicitLocus]FitnessMapping
@@ -12,15 +18,13 @@ func NewEnvironment(igenome *ImplicitGenome) *Environment {
 	}
 	for _, ilocus := range(igenome.ImplicitLoci) {
 		minFitness := RandomFloat()
-		maxFitness := RandomFloat() * 3
+		maxFitness := RandomFloat() * MAX_FITNESS
 		if minFitness > maxFitness {
 			tmp := minFitness
 			minFitness = maxFitness
 			maxFitness = tmp
 		}
-		if maxFitness < 1.2 {
-			maxFitness += 1.0
-		}
+		fmt.Printf("Max: %f\n", maxFitness)
 		optimal := ilocus.GenerateValue()
 		rec.FitnessData[ilocus] = FitnessMapping{
 			OptimalValue: optimal,

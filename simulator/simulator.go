@@ -1,5 +1,9 @@
 package simulator
 
+import (
+	"fmt"
+)
+
 type Simulator struct {
 	ImplicitGenome *ImplicitGenome
 	Organisms []*Organism
@@ -25,6 +29,7 @@ func NewSimulator(numLoci, numOrganisms int) *Simulator{
 
 func (rec *Simulator) PerformIteration() {
 	rec.Time += 1
+	fmt.Printf("Iteration %d: Organisms %d\n", rec.Time, len(rec.Organisms))
 	newOrganisms := []*Organism{}
 	for _, o := range(rec.Organisms) {
 		offspring := o.OffspringForEnvironment(rec.Environment)
