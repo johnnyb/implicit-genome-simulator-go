@@ -11,7 +11,7 @@ func NewOrganism(igenome *ImplicitGenome) *Organism {
 		Loci: make([]Locus, len(igenome.ImplicitLoci)),
 	}
 	for idx, ilocus := range(igenome.ImplicitLoci) {
-		rec.Loci[idx] = NewLocus(&ilocus)
+		rec.Loci[idx] = NewLocus(ilocus)
 	}
 
 	return &rec
