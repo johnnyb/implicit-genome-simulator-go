@@ -18,5 +18,11 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	// Run the simulation for X iterations
-	sim.PerformIterations(1000)
+	sim.PerformIterations(40)
+
+	// Change environment
+	newEnv := simulator.NewEnvironment(sim.ImplicitGenome)
+	sim.Environment = newEnv
+
+	sim.PerformIterations(40)
 }
