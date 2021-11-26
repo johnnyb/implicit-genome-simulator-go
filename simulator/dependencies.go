@@ -20,7 +20,7 @@ var RandomInt = func(minval, maxval int) int {
 // Log is the generic logging function.  It's basically a replacement for fmt.Printf so that I don't have to import/unimport "fmt" when I want to add Printf statements.
 // In general, DataLog should be used instead of Log.
 var Log = func(format string, a ...interface{}) (n int, err error) {
-	return fmt.Printf(format, a...)
+	return fmt.Printf(format + "\n", a...)
 }
 
 // DataContext is the active Simulator 

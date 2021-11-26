@@ -51,7 +51,7 @@ func (rec *Simulator) CullToSizeNonStrict(numOrganisms int) {
 func (rec *Simulator) PerformIteration() {
 	DataLog(ITERATION_START, nil)
 	rec.Time += 1
-	Log("Iteration %d: Organisms %d\n", rec.Time, len(rec.Organisms))
+	Log("Iteration %d: Organisms %d", rec.Time, len(rec.Organisms))
 	newOrganisms := []*Organism{}
 	for _, o := range(rec.Organisms) {
 		offspring := o.OffspringForEnvironment(rec.Environment)

@@ -22,7 +22,7 @@ func DataLogBeneficialMutations(metric Metric, value interface{}) {
 				deleteriousCount += 1
 			}
 		case ITERATION_COMPLETE:
-			Log("B/D Ratio: %f, Total: %d\n", float32(beneficialCount) / float32(deleteriousCount), beneficialCount + deleteriousCount)
+			Log("B/D Ratio: %f, Total: %d", float32(beneficialCount) / float32(deleteriousCount), beneficialCount + deleteriousCount)
 			currentTime += 1
 			beneficialCount = 0
 			deleteriousCount = 0
@@ -34,9 +34,9 @@ func DataLogVerbose(metric Metric, value interface{}) {
 	if DataContext != nil {
 		switch value.(type) {
 			case float32:
-				Log("METRIC: %d / %d / %f\n", DataContext.Time, metric, value)
+				Log("METRIC: %d / %d / %f", DataContext.Time, metric, value)
 			default:
-				Log("METRIC: %d / %s / %+v\n", DataContext.Time, metric, value)
+				Log("METRIC: %d / %s / %+v", DataContext.Time, metric, value)
 		}
 	}
 }

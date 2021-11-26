@@ -20,7 +20,7 @@ func main() {
 
 	for i := 0; i < 10; i++ {
 		// Run the simulation for X iterations
-		sim.PerformIterations(50)
+		sim.PerformIterations(300)
 
 		// Change environment
 		newEnv := simulator.NewEnvironment(sim.ImplicitGenome)
