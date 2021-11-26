@@ -4,6 +4,7 @@ type Simulator struct {
 	ImplicitGenome *ImplicitGenome
 	Organisms []*Organism
 	Environment *Environment
+	MaxOrganisms int
 	Time int
 }
 
@@ -23,6 +24,30 @@ func NewSimulator(numLoci, numOrganisms int) *Simulator{
 	return &rec
 }
 
+func (rec *Simulator) CullOrganisms() {
+	if rec.MaxOrganisms > 0 {
+		rec.CullToSizeNonStrict(rec.MaxOrganisms)
+	}
+}
+
+func (rec *Simulator) CullToSizeNonStrict(numOrganisms int) {
+	ratio := float32(numOrganisms)/float32(len(rec.Organisms))
+	if ratio >= 1.0 {
+		return
+	}
+
+	culledOrganisms := []*Organism{}
+	for _, o := range(rec.Organisms) {
+		if RandomFloat() <= ratio {
+			culledOrganisms = append(culledOrganisms, o)
+		}
+	}
+
+	Log("Culled %d organisms", len(rec.Organisms) - len(culledOrganisms))
+
+	rec.Organisms = culledOrganisms
+}
+
 func (rec *Simulator) PerformIteration() {
 	DataLog(ITERATION_START, nil)
 	rec.Time += 1
@@ -36,7 +61,9 @@ func (rec *Simulator) PerformIteration() {
 	}
 	rec.Organisms = newOrganisms
 
-	rec.ChangeEnvironment()
+	rec.CullOrganisms()
+
+	rec.PossiblyChangeEnvironment()
 
 	DataLog(ITERATION_COMPLETE, nil)
 }
@@ -47,7 +74,7 @@ func (rec *Simulator) PerformIterations(numIterations int) {
 	}
 }
 
-func (rec *Simulator) ChangeEnvironment() {
+func (rec *Simulator) PossiblyChangeEnvironment() {
 	// FIXME
 }
 

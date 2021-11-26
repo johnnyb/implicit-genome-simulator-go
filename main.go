@@ -9,6 +9,7 @@ import (
 func main() {
 	// Create simulator (10 loci, 100 organisms)
 	sim := simulator.NewSimulator(10, 100)
+	sim.MaxOrganisms = 1000000
 
 	// Logging setup
 	simulator.DataContext = sim
@@ -17,12 +18,14 @@ func main() {
 	// Seed the PRNG
 	rand.Seed(time.Now().UnixNano())
 
-	// Run the simulation for X iterations
-	sim.PerformIterations(40)
+	for i := 0; i < 10; i++ {
+		// Run the simulation for X iterations
+		sim.PerformIterations(50)
 
-	// Change environment
-	newEnv := simulator.NewEnvironment(sim.ImplicitGenome)
-	sim.Environment = newEnv
+		// Change environment
+		newEnv := simulator.NewEnvironment(sim.ImplicitGenome)
+		sim.Environment = newEnv
 
-	sim.PerformIterations(40)
+		simulator.Log("ENVIRONMENT CHANGE")
+	}
 }
