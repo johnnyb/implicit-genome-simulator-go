@@ -1,5 +1,7 @@
 package simulator
 
+import "fmt"
+
 // Organism is a collection of loci.
 type Organism struct {
 	ImplicitGenome *ImplicitGenome
@@ -78,6 +80,15 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 	}
 
 	return offspring
+}
+
+func (rec *Organism) String() string {
+	description := "ORGANISM:\n"
+	for _, locus := range rec.Loci {
+		description += fmt.Sprintf("  %s\n", locus.String())
+	}
+
+	return description
 }
 
 // NumOffspringForFitness uses the PRNG to determine, based on fitness, how many offspring an organism should have.
