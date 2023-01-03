@@ -22,6 +22,7 @@ type ImplicitLocus struct {
 }
 
 var lastLocusId int32 = 0
+var DefaultMutability float32 = 0.01
 
 // NewImplicitLocus creates a new implicit locus and sets the type and range randomly.
 func NewImplicitLocus() *ImplicitLocus {
@@ -30,7 +31,7 @@ func NewImplicitLocus() *ImplicitLocus {
 	rec := ImplicitLocus{
 		LocusId: lastLocusId,
 	}
-	rec.Mutability = 0.0001
+	rec.Mutability = DefaultMutability
 
 	rec.ContinuousChangeMax = 0.25
 	if RandomFloat() < 0.5 {
