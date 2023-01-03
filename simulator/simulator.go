@@ -1,20 +1,36 @@
 package simulator
 
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
 type Simulator struct {
 	ImplicitGenome *ImplicitGenome
-	Organisms []*Organism
-	Environment *Environment
-	MaxOrganisms int
-	Time int
+	Organisms      []*Organism
+	Environment    *Environment
+	MaxOrganisms   int
+	Time           int
 }
 
-func NewSimulator(numLoci, numOrganisms int) *Simulator{
+func Reseed() int64 {
+	seed := time.Now().UnixNano()
+	rand.Seed(seed)
+	return seed
+}
+
+func ReseedAndPrint() {
+	fmt.Printf("Running with seed: %d\n", Reseed())
+}
+
+func NewSimulator(numLoci, numOrganisms int) *Simulator {
 	igenome := NewImplicitGenome(numLoci)
 	rec := Simulator{
 		ImplicitGenome: igenome,
-		Environment: NewEnvironment(igenome),
-		Organisms: make([]*Organism, numOrganisms),
-		Time: 0,
+		Environment:    NewEnvironment(igenome),
+		Organisms:      make([]*Organism, numOrganisms),
+		Time:           0,
 	}
 
 	for i := 0; i < numOrganisms; i++ {
@@ -31,19 +47,19 @@ func (rec *Simulator) CullOrganisms() {
 }
 
 func (rec *Simulator) CullToSizeNonStrict(numOrganisms int) {
-	ratio := float32(numOrganisms)/float32(len(rec.Organisms))
+	ratio := float32(numOrganisms) / float32(len(rec.Organisms))
 	if ratio >= 1.0 {
 		return
 	}
 
 	culledOrganisms := []*Organism{}
-	for _, o := range(rec.Organisms) {
+	for _, o := range rec.Organisms {
 		if RandomFloat() <= ratio {
 			culledOrganisms = append(culledOrganisms, o)
 		}
 	}
 
-	Log("Culled %d organisms", len(rec.Organisms) - len(culledOrganisms))
+	Log("Culled %d organisms", len(rec.Organisms)-len(culledOrganisms))
 
 	rec.Organisms = culledOrganisms
 }
@@ -53,9 +69,9 @@ func (rec *Simulator) PerformIteration() {
 	rec.Time += 1
 	Log("Iteration %d: Organisms %d", rec.Time, len(rec.Organisms))
 	newOrganisms := []*Organism{}
-	for _, o := range(rec.Organisms) {
+	for _, o := range rec.Organisms {
 		offspring := o.OffspringForEnvironment(rec.Environment)
-		for _, newO := range(offspring) {
+		for _, newO := range offspring {
 			newOrganisms = append(newOrganisms, newO)
 		}
 	}
@@ -77,4 +93,3 @@ func (rec *Simulator) PerformIterations(numIterations int) {
 func (rec *Simulator) PossiblyChangeEnvironment() {
 	// FIXME
 }
-
