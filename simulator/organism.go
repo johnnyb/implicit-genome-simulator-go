@@ -3,7 +3,7 @@ package simulator
 // Organism is a collection of loci.
 type Organism struct {
 	ImplicitGenome *ImplicitGenome
-	Loci []Locus
+	Loci           []Locus
 }
 
 // Creates a new organism with the given implicit genome.
@@ -11,9 +11,9 @@ type Organism struct {
 func NewOrganism(igenome *ImplicitGenome) *Organism {
 	rec := Organism{
 		ImplicitGenome: igenome,
-		Loci: make([]Locus, len(igenome.ImplicitLoci)),
+		Loci:           make([]Locus, len(igenome.ImplicitLoci)),
 	}
-	for idx, ilocus := range(igenome.ImplicitLoci) {
+	for idx, ilocus := range igenome.ImplicitLoci {
 		rec.Loci[idx] = NewLocus(ilocus)
 	}
 
@@ -24,7 +24,7 @@ func NewOrganism(igenome *ImplicitGenome) *Organism {
 func (rec *Organism) Duplicate() *Organism {
 	newrec := Organism{
 		ImplicitGenome: rec.ImplicitGenome,
-		Loci: make([]Locus, len(rec.Loci)),
+		Loci:           make([]Locus, len(rec.Loci)),
 	}
 	for i := 0; i < len(rec.Loci); i++ {
 		newrec.Loci[i] = rec.Loci[i]
@@ -34,17 +34,20 @@ func (rec *Organism) Duplicate() *Organism {
 }
 
 // Evolve goes through an organism's loci and applies random changes based on the mutation rate (using PossiblyMutate from the Locus).
-func (rec *Organism) Evolve() {
-	for idx := range(rec.Loci) {
-		rec.Loci[idx].PossiblyMutate()
+func (rec *Organism) Evolve() bool {
+	mutated := false
+	for idx := range rec.Loci {
+		if rec.Loci[idx].PossiblyMutate() {
+			mutated = true
+		}
 	}
+	return mutated
 }
-
 
 // FitnessForEnvironment evaluates the fitness of the total organism in a given environment.
 func (rec *Organism) FitnessForEnvironment(env *Environment) float32 {
 	var fitnessSum float32 = 0
-	for _, locus := range(rec.Loci) {
+	for _, locus := range rec.Loci {
 		fitnessSum += env.FitnessForLocus(locus)
 	}
 	fitness := fitnessSum / ((float32)(len(rec.Loci)))
@@ -62,13 +65,14 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 
 	for i := 0; i < numOffspring; i++ {
 		newOrganism := rec.Duplicate()
-		newOrganism.Evolve()
+		didEvolve := newOrganism.Evolve()
 		offspring = append(offspring, newOrganism)
 
 		// Is it more or less fit?
 		newFitness := newOrganism.FitnessForEnvironment(env)
-		if newFitness != fitness {
-			DataLog(ORGANISM_FITNESS_DIFFERENCE, newFitness - fitness)
+
+		if didEvolve {
+			DataLog(ORGANISM_FITNESS_DIFFERENCE, newFitness-fitness)
 			DataLog(ORGANISM_MUTATIONS_BENEFICIAL, newFitness > fitness)
 		}
 	}
@@ -84,7 +88,7 @@ func NumOffspringForFitness(fitness float32) int {
 		tmp := RandomFloat()
 		if tmp > ratio {
 			break
-		} 
+		}
 		num += 1
 	}
 
