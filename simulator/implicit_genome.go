@@ -1,5 +1,7 @@
 package simulator
 
+import "fmt"
+
 // ImplicitGenome is a collection of implicit loci
 type ImplicitGenome struct {
 	ImplicitLoci []*ImplicitLocus
@@ -15,4 +17,13 @@ func NewImplicitGenome(numLoci int) *ImplicitGenome {
 	return &ImplicitGenome{
 		ImplicitLoci: loci,
 	}
+}
+
+func (rec *ImplicitGenome) String() string {
+	description := "IGENOME:\n"
+	for _, ilocus := range rec.ImplicitLoci {
+		description += fmt.Sprintf("  %s\n", ilocus.String())
+	}
+
+	return description
 }
