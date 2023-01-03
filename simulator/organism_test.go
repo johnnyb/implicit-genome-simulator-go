@@ -1,16 +1,30 @@
 package simulator
 
 import (
+	"fmt"
 	"math"
-	"math/rand"
 	"testing"
-	"time"
 )
 
+func TestOrganismDynamics(t *testing.T) {
+	ReseedAndPrint()
+
+	igenome := NewImplicitGenome(10)
+	o := NewOrganism(igenome)
+	fmt.Println(o.String())
+
+	newO := o.Duplicate()
+	didEvolve := newO.Evolve()
+	if didEvolve {
+		fmt.Println(newO.String())
+		fmt.Println(o.String())
+	} else {
+		fmt.Println("Did not evolve")
+	}
+}
+
 func TestNumOffspringForFitness(t *testing.T) {
-	seed := time.Now().UnixNano()
-	// fmt.Printf("Running with seed: %d\n", seed)
-	rand.Seed(seed)
+	ReseedAndPrint()
 
 	fitnesses := []float32{0.5, 1.0, 2.0, 4.0, 0.25}
 	for _, fitness := range fitnesses {
