@@ -1,5 +1,7 @@
 package simulator
 
+import "fmt"
+
 // Locus is the real locus within an Organism, based on an ImplicitLocus (which defines the possible range and mutability).
 type Locus struct {
 	ImplicitLocus *ImplicitLocus
@@ -32,4 +34,8 @@ func (rec *Locus) PossiblyMutate() bool {
 // Generates a new value for this locus, potentially based on the previous value.
 func (rec *Locus) Mutate() {
 	rec.Value = rec.ImplicitLocus.GenerateModifiedValueFrom(rec.Value)
+}
+
+func (rec *Locus) String() string {
+	return fmt.Sprintf("L%d: %f", rec.ImplicitLocus.LocusId, rec.Value)
 }
