@@ -14,6 +14,10 @@ type Simulator struct {
 	Time           int
 }
 
+func Seed(val int64) {
+	rand.Seed(val)
+}
+
 func Reseed() int64 {
 	seed := time.Now().UnixNano()
 	rand.Seed(seed)
