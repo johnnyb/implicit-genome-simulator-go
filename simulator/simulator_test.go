@@ -12,10 +12,6 @@ func TestSimulator(t *testing.T) {
 	sim := NewSimulator(10, 100, DEFAULT_MUTABILITY)
 	sim.MaxOrganisms = 10000
 
-	// Setup Data Logging
-	DataContext = sim
-	DataLog = DataLogBeneficialMutations
-
 	// Seed PRNG
 	rand.Seed(time.Now().UnixNano())
 

@@ -10,7 +10,8 @@ func TestOrganismDynamics(t *testing.T) {
 	ReseedAndPrint()
 
 	igenome := NewImplicitGenome(10, DEFAULT_MUTABILITY)
-	o := NewOrganism(igenome)
+	sim := &Simulator{}
+	o := NewOrganism(sim, igenome)
 	fmt.Println(o.String())
 
 	newO := o.Duplicate()

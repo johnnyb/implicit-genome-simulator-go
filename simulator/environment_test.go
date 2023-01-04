@@ -12,8 +12,8 @@ func TestEnvironmentDynamics(t *testing.T) {
 	fmt.Println(igenome.String())
 	env := NewEnvironment(igenome)
 	fmt.Println(env.String())
-
-	o := NewOrganism(igenome)
+	sim := &Simulator{}
+	o := NewOrganism(sim, igenome)
 	fmt.Println(o.String())
 
 	fmt.Println("Fitness:")

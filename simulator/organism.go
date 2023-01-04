@@ -4,14 +4,16 @@ import "fmt"
 
 // Organism is a collection of loci.
 type Organism struct {
+	Simulator      *Simulator
 	ImplicitGenome *ImplicitGenome
 	Loci           []Locus
 }
 
 // Creates a new organism with the given implicit genome.
 // Assigns initial values of loci randomly
-func NewOrganism(igenome *ImplicitGenome) *Organism {
+func NewOrganism(sim *Simulator, igenome *ImplicitGenome) *Organism {
 	rec := Organism{
+		Simulator:      sim,
 		ImplicitGenome: igenome,
 		Loci:           make([]Locus, len(igenome.ImplicitLoci)),
 	}
@@ -25,6 +27,7 @@ func NewOrganism(igenome *ImplicitGenome) *Organism {
 // Duplicate does a perfect duplication of the organism (no mutations).  Use Evolve() on the duplicated organism to potentially get mutations.
 func (rec *Organism) Duplicate() *Organism {
 	newrec := Organism{
+		Simulator:      rec.Simulator,
 		ImplicitGenome: rec.ImplicitGenome,
 		Loci:           make([]Locus, len(rec.Loci)),
 	}
@@ -63,8 +66,6 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 	fitness := rec.FitnessForEnvironment(env)
 	numOffspring := NumOffspringForFitness(fitness)
 
-	// Log("Organism: Fitness/%f Offspring/%d\n", fitness, numOffspring)
-
 	for i := 0; i < numOffspring; i++ {
 		newOrganism := rec.Duplicate()
 		didEvolve := newOrganism.Evolve()
@@ -74,8 +75,8 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 		newFitness := newOrganism.FitnessForEnvironment(env)
 
 		if didEvolve {
-			DataLog(ORGANISM_FITNESS_DIFFERENCE, newFitness-fitness)
-			DataLog(ORGANISM_MUTATIONS_BENEFICIAL, newFitness > fitness)
+			rec.Simulator.DataLog(ORGANISM_FITNESS_DIFFERENCE, newFitness-fitness)
+			rec.Simulator.DataLog(ORGANISM_MUTATIONS_BENEFICIAL, newFitness > fitness)
 		}
 	}
 

@@ -12,6 +12,8 @@ type Simulator struct {
 	Environment    *Environment
 	MaxOrganisms   int
 	Time           int
+	DataLogger     func(sim *Simulator, metric Metric, value interface{})
+	Logger         func(sim *Simulator, message string)
 }
 
 func Seed(val int64) {
@@ -30,18 +32,20 @@ func ReseedAndPrint() {
 
 func NewSimulator(numLoci, numOrganisms int, defaultMutability float32) *Simulator {
 	igenome := NewImplicitGenome(numLoci, defaultMutability)
-	rec := Simulator{
+	rec := &Simulator{
 		ImplicitGenome: igenome,
 		Environment:    NewEnvironment(igenome),
 		Organisms:      make([]*Organism, numOrganisms),
 		Time:           0,
+		DataLogger:     func(sim *Simulator, metric Metric, value interface{}) {},
+		Logger:         func(sim *Simulator, msg string) { fmt.Println(msg) },
 	}
 
 	for i := 0; i < numOrganisms; i++ {
-		rec.Organisms[i] = NewOrganism(igenome)
+		rec.Organisms[i] = NewOrganism(rec, igenome)
 	}
 
-	return &rec
+	return rec
 }
 
 func (rec *Simulator) CullOrganisms() {
@@ -63,15 +67,15 @@ func (rec *Simulator) CullToSizeNonStrict(numOrganisms int) {
 		}
 	}
 
-	Log("Culled %d organisms", len(rec.Organisms)-len(culledOrganisms))
+	rec.Log(fmt.Sprintf("Culled %d organisms", len(rec.Organisms)-len(culledOrganisms)))
 
 	rec.Organisms = culledOrganisms
 }
 
 func (rec *Simulator) PerformIteration() {
-	DataLog(ITERATION_START, nil)
+	rec.DataLog(ITERATION_START, nil)
 	rec.Time += 1
-	Log("Iteration %d: Organisms %d", rec.Time, len(rec.Organisms))
+	rec.Log(fmt.Sprintf("Iteration %d: Organisms %d", rec.Time, len(rec.Organisms)))
 	newOrganisms := []*Organism{}
 	for _, o := range rec.Organisms {
 		offspring := o.OffspringForEnvironment(rec.Environment)
@@ -85,13 +89,21 @@ func (rec *Simulator) PerformIteration() {
 
 	rec.PossiblyChangeEnvironment()
 
-	DataLog(ITERATION_COMPLETE, nil)
+	rec.DataLog(ITERATION_COMPLETE, nil)
 }
 
 func (rec *Simulator) PerformIterations(numIterations int) {
 	for i := 0; i < numIterations; i++ {
 		rec.PerformIteration()
 	}
+}
+
+func (rec *Simulator) DataLog(metric Metric, value interface{}) {
+	rec.DataLogger(rec, metric, value)
+}
+
+func (rec *Simulator) Log(msg string) {
+	rec.Logger(rec, msg)
 }
 
 func (rec *Simulator) PossiblyChangeEnvironment() {
