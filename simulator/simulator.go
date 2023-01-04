@@ -24,8 +24,8 @@ func ReseedAndPrint() {
 	fmt.Printf("Running with seed: %d\n", Reseed())
 }
 
-func NewSimulator(numLoci, numOrganisms int) *Simulator {
-	igenome := NewImplicitGenome(numLoci)
+func NewSimulator(numLoci, numOrganisms int, defaultMutability float32) *Simulator {
+	igenome := NewImplicitGenome(numLoci, defaultMutability)
 	rec := Simulator{
 		ImplicitGenome: igenome,
 		Environment:    NewEnvironment(igenome),

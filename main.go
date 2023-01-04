@@ -9,7 +9,8 @@ func main() {
 	simulator.ReseedAndPrint()
 
 	// Create simulator (10 loci, 100 organisms)
-	sim := simulator.NewSimulator(20, 100)
+	// sim := simulator.NewSimulator(10, 100, simulator.DEFAULT_MUTABILITY)
+	sim := simulator.NewSimulator(1, 100, 0.1)
 	sim.MaxOrganisms = 10000
 
 	// Logging setup

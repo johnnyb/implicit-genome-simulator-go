@@ -10,6 +10,8 @@ const (
 	LOCUS_CONTINUOUS
 )
 
+const DEFAULT_MUTABILITY float32 = 0.01
+
 // ImplicitLocus is the generic type of a locus.
 // Note that on the implementation, the value is always a float even if it is discrete.
 // This makes the implementation easier and more uniform.
@@ -22,7 +24,6 @@ type ImplicitLocus struct {
 }
 
 var lastLocusId int32 = 0
-var DefaultMutability float32 = 0.01
 
 // NewImplicitLocus creates a new implicit locus and sets the type and range randomly.
 func NewImplicitLocus() *ImplicitLocus {
@@ -31,7 +32,7 @@ func NewImplicitLocus() *ImplicitLocus {
 	rec := ImplicitLocus{
 		LocusId: lastLocusId,
 	}
-	rec.Mutability = DefaultMutability
+	rec.Mutability = DEFAULT_MUTABILITY
 
 	rec.ContinuousChangeMax = 0.25
 	if RandomFloat() < 0.5 {

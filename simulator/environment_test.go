@@ -8,7 +8,7 @@ import (
 func TestEnvironmentDynamics(t *testing.T) {
 	ReseedAndPrint()
 
-	igenome := NewImplicitGenome(10)
+	igenome := NewImplicitGenome(10, DEFAULT_MUTABILITY)
 	fmt.Println(igenome.String())
 	env := NewEnvironment(igenome)
 	fmt.Println(env.String())

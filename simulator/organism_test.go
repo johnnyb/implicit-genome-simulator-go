@@ -9,7 +9,7 @@ import (
 func TestOrganismDynamics(t *testing.T) {
 	ReseedAndPrint()
 
-	igenome := NewImplicitGenome(10)
+	igenome := NewImplicitGenome(10, DEFAULT_MUTABILITY)
 	o := NewOrganism(igenome)
 	fmt.Println(o.String())
 

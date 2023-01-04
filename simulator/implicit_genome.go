@@ -8,10 +8,11 @@ type ImplicitGenome struct {
 }
 
 // NewImplicitGenome creates an ImplicitGenome with a specific number of loci
-func NewImplicitGenome(numLoci int) *ImplicitGenome {
+func NewImplicitGenome(numLoci int, defaultMutability float32) *ImplicitGenome {
 	loci := make([]*ImplicitLocus, numLoci)
 	for i := 0; i < numLoci; i++ {
 		loci[i] = NewImplicitLocus()
+		loci[i].Mutability = defaultMutability
 	}
 
 	return &ImplicitGenome{
