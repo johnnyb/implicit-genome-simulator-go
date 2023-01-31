@@ -15,6 +15,7 @@ type Config struct {
 	Iterations        int
 	Environments      int
 	Mutability        float32
+	Quiet             bool
 }
 
 func NewConfig() *Config {
@@ -31,6 +32,7 @@ func NewConfig() *Config {
 
 func ParseFlags(config *Config) {
 	mutability := float64(config.Mutability)
+	flag.BoolVar(&config.Quiet, "quiet", false, "Limits output sent to STDOUT")
 	flag.StringVar(&config.DataFile, "datafile", "", "Sends the output to a file")
 	flag.Int64Var(&config.Seed, "seed", config.Seed, "Sets the random number generator seed")
 	flag.IntVar(&config.Loci, "loci", config.Loci, "Sets the number of loci in the implicit genome")

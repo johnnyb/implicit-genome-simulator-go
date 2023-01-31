@@ -37,6 +37,10 @@ func main() {
 
 	sim.Log(fmt.Sprintf("Started with seed: %d", config.Seed))
 
+	if config.Quiet {
+		sim.Logger = func(sim *simulator.Simulator, message string) {}
+	}
+
 	sim.Log("**** IGENOME ****")
 	sim.Log(sim.ImplicitGenome.String())
 
