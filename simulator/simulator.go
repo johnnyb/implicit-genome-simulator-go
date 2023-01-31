@@ -74,6 +74,11 @@ func (rec *Simulator) CullToSizeNonStrict(numOrganisms int) {
 }
 
 func (rec *Simulator) PerformIteration() {
+	// If this is the first run, we might not have an environment yet
+	if rec.Environment == nil {
+		rec.SetEnvironment(NewEnvironment(rec.ImplicitGenome))
+	}
+
 	rec.DataLog(ITERATION_START, nil)
 	rec.Time += 1
 	rec.Log(fmt.Sprintf("Iteration %d: Organisms %d", rec.Time, len(rec.Organisms)))

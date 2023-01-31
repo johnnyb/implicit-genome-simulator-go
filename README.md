@@ -38,8 +38,14 @@ func main() {
 	// Seed the PRNG
 	rand.Seed(time.Now().UnixNano())
 
+	// Mostly for logging setup
+	sim.Initialize()
+
 	// Run the simulation for X iterations
 	sim.PerformIterations(1000)
+
+	// Mostly for logging
+	sim.Finish()
 }
 
 ```
