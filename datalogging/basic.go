@@ -19,7 +19,7 @@ func DataLogBeneficialMutations(sim *simulator.Simulator, metric simulator.Metri
 		currentEnvironment = value.(*simulator.Environment)
 	case simulator.ENVIRONMENT_COMPLETE:
 	case simulator.SIMULATION_START:
-		sim.DataLogOutput("Generation,Environment,# Organisms Mutated,B/D Ratio,Fitness\n")
+		sim.DataLogOutput(fmt.Sprintf("Generation,Environment,# Organisms Mutated,B/D Ratio,Fitness,SEED:%d\n", simulator.RandomSeed))
 	case simulator.ORGANISM_MUTATIONS_BENEFICIAL:
 		if value.(bool) {
 			beneficialCount += 1
