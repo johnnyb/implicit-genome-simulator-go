@@ -100,8 +100,11 @@ func (rec *Simulator) PerformIterations(numIterations int) {
 }
 
 func (rec *Simulator) SetEnvironment(env *Environment) {
+	if rec.Environment != nil {
+		rec.DataLogger(rec, ENVIRONMENT_COMPLETE, rec.Environment)
+	}
 	rec.Environment = env
-	rec.DataLogger(rec, ENVIRONMENT_CHANGE, env)
+	rec.DataLogger(rec, ENVIRONMENT_START, env)
 }
 
 func (rec *Simulator) DataLog(metric Metric, value interface{}) {

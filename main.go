@@ -27,7 +27,7 @@ func main() {
 	if config.DataFile == "" {
 		sim.DataStream = os.Stdout
 	} else {
-		sim.DataStream, err = os.OpenFile(config.DataFile, os.O_CREATE|os.O_TRUNC, 0644)
+		sim.DataStream, err = os.OpenFile(config.DataFile, os.O_CREATE|os.O_TRUNC|os.O_WRONLY, 0644)
 		if err != nil {
 			panic(err)
 		}
