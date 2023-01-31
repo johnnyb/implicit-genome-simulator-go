@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/johnnyb/implicit-genome-simulator-go/datalogging"
@@ -10,6 +11,7 @@ import (
 )
 
 func main() {
+	var err error
 	config := NewConfig()
 	ParseFlags(config)
 
@@ -22,6 +24,14 @@ func main() {
 	// Create simulator (10 loci, 100 organisms)
 	// sim := simulator.NewSimulator(10, 100, simulator.DEFAULT_MUTABILITY)
 	sim := simulator.NewSimulator(config.Loci, config.StartingOrganisms, config.Mutability)
+	if config.DataFile == "" {
+		sim.DataStream = os.Stdout
+	} else {
+		sim.DataStream, err = os.OpenFile(config.DataFile, os.O_CREATE|os.O_TRUNC, 0644)
+		if err != nil {
+			panic(err)
+		}
+	}
 	sim.MaxOrganisms = config.MaxOrganisms
 	sim.DataLogger = datalogging.DataLogBeneficialMutations
 
@@ -29,6 +39,10 @@ func main() {
 
 	sim.Log("**** IGENOME ****")
 	sim.Log(sim.ImplicitGenome.String())
+
+	sim.Initialize()
+	sim.SetEnvironment(simulator.NewEnvironment(sim.ImplicitGenome))
+
 	for i := 0; i < config.Environments; i++ {
 		// Report environment
 		sim.Log("**** ENVIRONMENT ****")
@@ -38,6 +52,7 @@ func main() {
 		sim.PerformIterations(config.Iterations)
 
 		// Create New Environment
-		sim.Environment = simulator.NewEnvironment(sim.ImplicitGenome)
+		sim.SetEnvironment(simulator.NewEnvironment(sim.ImplicitGenome))
 	}
+	sim.Finish()
 }

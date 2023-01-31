@@ -2,6 +2,7 @@ package simulator
 
 import (
 	"fmt"
+	"io"
 	"math/rand"
 	"time"
 )
@@ -12,6 +13,7 @@ type Simulator struct {
 	Environment    *Environment
 	MaxOrganisms   int
 	Time           int
+	DataStream     io.WriteCloser
 	DataLogger     func(sim *Simulator, metric Metric, value interface{})
 	Logger         func(sim *Simulator, message string)
 }
@@ -34,7 +36,6 @@ func NewSimulator(numLoci, numOrganisms int, defaultMutability float32) *Simulat
 	igenome := NewImplicitGenome(numLoci, defaultMutability)
 	rec := &Simulator{
 		ImplicitGenome: igenome,
-		Environment:    NewEnvironment(igenome),
 		Organisms:      make([]*Organism, numOrganisms),
 		Time:           0,
 		DataLogger:     func(sim *Simulator, metric Metric, value interface{}) {},
@@ -98,8 +99,17 @@ func (rec *Simulator) PerformIterations(numIterations int) {
 	}
 }
 
+func (rec *Simulator) SetEnvironment(env *Environment) {
+	rec.Environment = env
+	rec.DataLogger(rec, ENVIRONMENT_CHANGE, env)
+}
+
 func (rec *Simulator) DataLog(metric Metric, value interface{}) {
 	rec.DataLogger(rec, metric, value)
+}
+
+func (rec *Simulator) DataLogOutput(msg string) {
+	rec.DataStream.Write([]byte(msg))
 }
 
 func (rec *Simulator) Log(msg string) {
@@ -108,4 +118,16 @@ func (rec *Simulator) Log(msg string) {
 
 func (rec *Simulator) PossiblyChangeEnvironment() {
 	// FIXME
+}
+
+func (rec *Simulator) Initialize() {
+	rec.DataLog(SIMULATION_START, nil)
+}
+
+func (rec *Simulator) Finish() {
+	rec.DataLog(SIMULATION_COMPLETE, nil)
+	err := rec.DataStream.Close()
+	if err != nil {
+		rec.Log("Error closing datafile: " + err.Error())
+	}
 }

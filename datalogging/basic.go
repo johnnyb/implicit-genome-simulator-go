@@ -10,9 +10,15 @@ var currentTime int = 1
 var beneficialCount int = 0
 var deleteriousCount int = 0
 
+var currentEnvironment *simulator.Environment
+
 // DataLogBeneficialMutations is a logging function which gives the beneficial/deleterious ratio.
 func DataLogBeneficialMutations(sim *simulator.Simulator, metric simulator.Metric, value interface{}) {
 	switch metric {
+	case simulator.ENVIRONMENT_CHANGE:
+		currentEnvironment = value.(*simulator.Environment)
+	case simulator.SIMULATION_START:
+		sim.DataLogOutput("Environment,Generation,# Organisms Mutated,B/D Ratio,Fitness\n")
 	case simulator.ORGANISM_MUTATIONS_BENEFICIAL:
 		if value.(bool) {
 			beneficialCount += 1
@@ -20,7 +26,12 @@ func DataLogBeneficialMutations(sim *simulator.Simulator, metric simulator.Metri
 			deleteriousCount += 1
 		}
 	case simulator.ITERATION_COMPLETE:
-		sim.Log(fmt.Sprintf("B/D Ratio: %f, Total: %d", float32(beneficialCount)/float32(deleteriousCount), beneficialCount+deleteriousCount))
+		sim.DataLogOutput(fmt.Sprintf(
+			"%d,%d,%d,%f\n",
+			currentEnvironment.EnvironmentId,
+			currentTime,
+			beneficialCount+deleteriousCount,
+			float32(beneficialCount)/float32(deleteriousCount)))
 		currentTime += 1
 		beneficialCount = 0
 		deleteriousCount = 0

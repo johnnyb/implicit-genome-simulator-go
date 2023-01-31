@@ -7,6 +7,7 @@ import (
 )
 
 type Config struct {
+	DataFile          string
 	Seed              int64
 	Loci              int
 	StartingOrganisms int
@@ -30,6 +31,7 @@ func NewConfig() *Config {
 
 func ParseFlags(config *Config) {
 	mutability := float64(config.Mutability)
+	flag.StringVar(&config.DataFile, "datafile", "", "Sends the output to a file")
 	flag.Int64Var(&config.Seed, "seed", config.Seed, "Sets the random number generator seed")
 	flag.IntVar(&config.Loci, "loci", config.Loci, "Sets the number of loci in the implicit genome")
 	flag.IntVar(&config.Environments, "envs", config.Environments, "Sets the number of environments to use")
