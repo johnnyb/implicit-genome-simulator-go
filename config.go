@@ -15,6 +15,7 @@ type Config struct {
 	Iterations        int
 	Environments      int
 	Mutability        float32
+	NeutralRange      float32
 	Quiet             bool
 }
 
@@ -27,12 +28,15 @@ func NewConfig() *Config {
 		Iterations:        100,
 		Environments:      5,
 		Mutability:        simulator.DEFAULT_MUTABILITY,
+		NeutralRange:      0.0,
 	}
 }
 
 func ParseFlags(config *Config) {
 	mutability := float64(config.Mutability)
-	flag.BoolVar(&config.Quiet, "quiet", false, "Limits output sent to STDOUT")
+	neutral := float64(config.NeutralRange)
+	flag.Float64Var(&neutral, "neutral-range", neutral, "This is the fitness range that is allowed for a mutation to be considered 'neutral'")
+	flag.BoolVar(&config.Quiet, "quiet", config.Quiet, "Limits output sent to STDOUT")
 	flag.StringVar(&config.DataFile, "datafile", "", "Sends the output to a file")
 	flag.Int64Var(&config.Seed, "seed", config.Seed, "Sets the random number generator seed")
 	flag.IntVar(&config.Loci, "loci", config.Loci, "Sets the number of loci in the implicit genome")
@@ -42,4 +46,6 @@ func ParseFlags(config *Config) {
 	flag.IntVar(&config.StartingOrganisms, "startorgs", config.StartingOrganisms, "Sets the starting number of organisms for the simulation")
 	flag.Float64Var(&mutability, "mutability", mutability, "The per-locus mutation rate for the organism (0.1 means that each locus will mutate 10% of the time")
 	flag.Parse()
+	config.Mutability = float32(mutability)
+	config.NeutralRange = float32(neutral)
 }

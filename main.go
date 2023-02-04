@@ -24,6 +24,8 @@ func main() {
 	// Create simulator (10 loci, 100 organisms)
 	// sim := simulator.NewSimulator(10, 100, simulator.DEFAULT_MUTABILITY)
 	sim := simulator.NewSimulator(config.Loci, config.StartingOrganisms, config.Mutability)
+	sim.NeutralRange = config.NeutralRange
+
 	if config.DataFile == "" {
 		sim.DataStream = os.Stdout
 	} else {
