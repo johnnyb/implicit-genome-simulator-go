@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	DataFile          string
+	PlotFile          string
 	Seed              int64
 	Loci              int
 	StartingOrganisms int
@@ -38,6 +39,7 @@ func ParseFlags(config *Config) {
 	flag.Float64Var(&neutral, "neutral-range", neutral, "This is the fitness range that is allowed for a mutation to be considered 'neutral'")
 	flag.BoolVar(&config.Quiet, "quiet", config.Quiet, "Limits output sent to STDOUT")
 	flag.StringVar(&config.DataFile, "datafile", "", "Sends the output to a file")
+	flag.StringVar(&config.PlotFile, "plotfile", "", "Generate a plot of the results (will be a .png file)")
 	flag.Int64Var(&config.Seed, "seed", config.Seed, "Sets the random number generator seed")
 	flag.IntVar(&config.Loci, "loci", config.Loci, "Sets the number of loci in the implicit genome")
 	flag.IntVar(&config.Environments, "envs", config.Environments, "Sets the number of environments to use")
