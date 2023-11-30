@@ -36,7 +36,13 @@ func main() {
 		}
 	}
 	sim.MaxOrganisms = config.MaxOrganisms
-	sim.DataLogger = datalogging.DataLogBeneficialMutations
+
+	dataLoggers := []datalogging.DataLogger{}
+	dataLoggers = append(dataLoggers, datalogging.DataLogBeneficialMutations)
+	if config.PlotFile != "" {
+		dataLoggers = append(dataLoggers, datalogging.NewDataLogPlotter(config.PlotFile))
+	}
+	sim.DataLogger = datalogging.DataLogTee(dataLoggers...)
 
 	sim.Log(fmt.Sprintf("Started with seed: %d", config.Seed))
 
