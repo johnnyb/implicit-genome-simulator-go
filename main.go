@@ -20,11 +20,12 @@ func main() {
 		config.Seed = time.Now().UnixNano()
 	}
 	simulator.Seed(config.Seed)
+	simulator.MAX_FITNESS = float32(config.MaxFitness)
 
 	// Create simulator (10 loci, 100 organisms)
 	// sim := simulator.NewSimulator(10, 100, simulator.DEFAULT_MUTABILITY)
-	sim := simulator.NewSimulator(config.Loci, config.StartingOrganisms, config.Mutability)
-	sim.NeutralRange = config.NeutralRange
+	sim := simulator.NewSimulator(config.Loci, config.StartingOrganisms, float32(config.Mutability))
+	sim.NeutralRange = float32(config.NeutralRange)
 
 	if config.DataFile == "" {
 		sim.DataStream = os.Stdout
