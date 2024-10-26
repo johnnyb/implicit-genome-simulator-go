@@ -2,8 +2,13 @@
 require "csv"
 
 envstats = {}
+seed = nil
 CSV.open(ARGV[0], :headers => true) do |csv|
   csv.each do |row|
+    if seed == nil
+      seed = row.headers.select{|x| x[0..4] == "SEED:"}[0].split(":")[1].to_i
+    end
+
     generation = row["Generation"].to_i
     environment = row["Environment"]
     bd_ratio = row["B/D Ratio"].to_f
@@ -12,6 +17,7 @@ CSV.open(ARGV[0], :headers => true) do |csv|
     stats = envstats[environment]
     if stats == nil
       stats = {
+        :seed => seed,
         :env => environment.to_i,
         :initial_bd => bd_ratio,
         :final_bd => bd_ratio,
