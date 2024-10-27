@@ -10,7 +10,7 @@ const (
 	LOCUS_CONTINUOUS
 )
 
-const DEFAULT_MUTABILITY float32 = 0.01
+var DEFAULT_MUTABILITY float32 = 0.01
 
 // ImplicitLocus is the generic type of a locus.
 // Note that on the implementation, the value is always a float even if it is discrete.

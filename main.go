@@ -20,6 +20,7 @@ func main() {
 		config.Seed = time.Now().UnixNano()
 	}
 	simulator.Seed(config.Seed)
+	simulator.DEFAULT_MUTABILITY = config.Mutability
 
 	// Create simulator (10 loci, 100 organisms)
 	// sim := simulator.NewSimulator(10, 100, simulator.DEFAULT_MUTABILITY)
