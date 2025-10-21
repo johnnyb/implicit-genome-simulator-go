@@ -21,10 +21,13 @@ func main() {
 	}
 	simulator.Seed(config.Seed)
 	simulator.DEFAULT_MUTABILITY = config.Mutability
+	simulator.MAX_FITNESS = float32(config.MaxFitness)
 
 	// Create simulator (10 loci, 100 organisms)
 	// sim := simulator.NewSimulator(10, 100, simulator.DEFAULT_MUTABILITY)
-	sim := simulator.NewSimulator(config.Loci, config.StartingOrganisms, config.Mutability)
+	sim := simulator.NewSimulator(config.Loci, config.StartingOrganisms, float32(config.Mutability))
+	sim.NeutralRange = float32(config.NeutralRange)
+
 	if config.DataFile == "" {
 		sim.DataStream = os.Stdout
 	} else {

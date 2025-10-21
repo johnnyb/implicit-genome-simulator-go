@@ -1,6 +1,8 @@
 package simulator
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Organism is a collection of loci.
 type Organism struct {
@@ -75,6 +77,17 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 		newFitness := newOrganism.FitnessForEnvironment(env)
 
 		if didEvolve {
+			fitnessDifference := newFitness - fitness
+			absFitnessDifference := fitnessDifference
+			if absFitnessDifference < 0.0 {
+				absFitnessDifference = 0 - absFitnessDifference
+			}
+
+			if rec.Simulator.NeutralRange != 0 { // If NeutralRange is zero, then we are trating all mutations as if they are valid
+				if absFitnessDifference < rec.Simulator.NeutralRange {
+					break // We aren't treating this as being different
+				}
+			}
 			rec.Simulator.DataLog(ORGANISM_FITNESS_DIFFERENCE, newFitness-fitness)
 			rec.Simulator.DataLog(ORGANISM_MUTATIONS_BENEFICIAL, newFitness > fitness)
 		}

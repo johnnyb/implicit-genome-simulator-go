@@ -20,7 +20,7 @@ type ImplicitLocus struct {
 	LocusType           LocusType // LocusType tells whether this is a continuous or discrete-valued locus
 	RangeMax            float32   // RangeMax tells the maximum of the states that this will take (total states = RangeMax + 1); only used on discrete-valued loci.
 	ContinuousChangeMax float32   // The maximum amount that a continuous loci can change in a single mutation
-	Mutability          float32   // Mutability gives the change that this locus will be mutated per iteration.
+	Mutability          float32   // Mutability gives the chance that this locus will be mutated per iteration.
 }
 
 var lastLocusId int32 = 0

@@ -13,6 +13,7 @@ type Simulator struct {
 	Environment    *Environment
 	MaxOrganisms   int
 	Time           int
+	NeutralRange   float32
 	DataStream     io.WriteCloser
 	DataLogger     func(sim *Simulator, metric Metric, value interface{})
 	Logger         func(sim *Simulator, message string)
