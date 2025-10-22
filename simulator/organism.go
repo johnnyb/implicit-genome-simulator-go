@@ -85,7 +85,7 @@ func (rec *Organism) OffspringForEnvironment(env *Environment) []*Organism {
 
 			if rec.Simulator.NeutralRange != 0 { // If NeutralRange is zero, then we are trating all mutations as if they are valid
 				if absFitnessDifference < rec.Simulator.NeutralRange {
-					break // We aren't treating this as being different
+					continue // We aren't treating this as being different
 				}
 			}
 			rec.Simulator.DataLog(ORGANISM_FITNESS_DIFFERENCE, newFitness-fitness)
